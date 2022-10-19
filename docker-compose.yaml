@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  go:
+    build: ./go
+    container_name: iapm-goapi
+    ports:
+      - 8080:8080
+    env_file:
+      - ./db/.env
+    volumes:
+      - ./go/goapi:/go/src
+    depends_on:
+      - db
+  db:
+    image: mariadb:10.9.3
+    container_name: iapm-db
+    ports:
+      - 13306:3306
+    env_file:
+      - ./db/.env
+    environment:
+      TZ: "Asia/Tokyo"
+    volumes:
+      - ./db/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./db/init:/docker-entrypoint-initdb.d
