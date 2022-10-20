@@ -1,10 +1,28 @@
 package models
 
-import "time"
+import (
+	"log"
+)
 
 type Suffix struct {
-	ID        int
-	Name      string
-	IsPrefix  bool
-	CreatedAt time.Time
+	Name     string
+	IsPrefix bool
+	Weight   int
+}
+
+func GetAllSuffixes() (suffixes []Suffix, err error) {
+	rows, err := Db.Query("select name, is_prefix, weight from suffixes")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for rows.Next() {
+		var suffix Suffix
+		err = rows.Scan(&suffix.Name, &suffix.IsPrefix, &suffix.Weight)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		suffixes = append(suffixes, suffix)
+	}
+	rows.Close()
+	return suffixes, err
 }
