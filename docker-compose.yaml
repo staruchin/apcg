@@ -1,10 +1,17 @@
 version: "3.8"
 services:
+  web:
+    image: staruchin/apcg-web:0.0.1
+    container_name: apcg-web
+    ports:
+      - 8080:80
+    depends_on:
+      - go
   go:
     build: ./go
-    container_name: iapm-goapi
+    container_name: apcg-goapi
     ports:
-      - 8080:8080
+      - 8081:8080
     env_file:
       - ./db/.env
     volumes:
@@ -13,9 +20,7 @@ services:
       - db
   db:
     image: mariadb:10.9.3
-    container_name: iapm-db
-    ports:
-      - 13306:3306
+    container_name: apcg-db
     env_file:
       - ./db/.env
     environment:

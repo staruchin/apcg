@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"math/rand"
 	"net/http"
@@ -19,7 +19,7 @@ func StartServer() {
 
 	initialize()
 
-	http.HandleFunc("/iapm/api/v1/chara", chara)
+	http.HandleFunc("/apcg/api/v1/character", character)
 
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -50,16 +50,24 @@ func initialize() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-func createRand(num int) int {
-	return rand.Intn(num)
-}
+func character(w http.ResponseWriter, r *http.Request) {
 
-func chara(w http.ResponseWriter, r *http.Request) {
-	word := words[createRand(numOfWords)]
-	suffix := suffixes[createRand(numOfSuffixes)]
+	word := words[rand.Intn(numOfWords)]
+	suffix := suffixes[rand.Intn(numOfSuffixes)]
+
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+
+	var name string
 	if !suffix.IsPrefix {
-		fmt.Fprintf(w, word+suffix.Name)
+		name = word + suffix.Name
 	} else {
-		fmt.Fprintf(w, suffix.Name+word)
+		name = suffix.Name + word
+	}
+
+	if err := json.NewEncoder(w).Encode(map[string]string{"name": name}); err != nil {
+		log.Println(err)
 	}
 }

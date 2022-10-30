@@ -1,2 +1,3 @@
-# iapm
-Imaginary Anpanman Characters Generator
+# apcg
+
+A\*panman-ppoi Character Generator

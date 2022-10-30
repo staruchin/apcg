@@ -1,0 +1,41 @@
+<div fxLayout="column">
+  <mat-toolbar color="primary" fxLayoutAlign="center center">
+    <span class="main-title">{{ title }}</span>
+  </mat-toolbar>
+  <div fxFlex="50px" fxLayoutAlign="center center">
+    <span class="sub-title">たまに実在キャラが出ます</span>
+  </div>
+  <div fxFlex="200px" fxLayoutAlign="center center">
+    <span id="main-name" class="main-name">{{ selected.name }}</span>
+  </div>
+  <div fxFlex="80px" fxLayoutAlign="center center">
+    <button mat-raised-button color="primary" (click)="generate()">
+      生成する
+    </button>
+  </div>
+  <ng-container *ngIf="selected.name">
+    <div fxFlex="120px" fxLayoutAlign="center center">
+      <a
+        class="tweet-button"
+        href="https://twitter.com/share?hashtags={{ title }}&text={{
+          selected.name
+        }}&url={{ url }}"
+        target="_blank"
+      >
+        <img class="image" src="/assets/twitter-logo.png" alt="ツイート" />
+        <span>ツイート</span></a
+      >
+    </div>
+    <div fxFlex="50px" fxLayoutAlign="center center" class="history-title">
+      <span>履歴</span>
+    </div>
+    <mat-selection-list [multiple]="false">
+      <mat-list-option
+        fxLayoutAlign="center center"
+        *ngFor="let c of histories"
+        (selectedChange)="select(c)"
+        >{{ c.name }}</mat-list-option
+      >
+    </mat-selection-list>
+  </ng-container>
+</div>

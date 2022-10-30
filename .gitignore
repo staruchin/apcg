@@ -82,3 +82,5 @@ go.work
 # End of https://www.toptal.com/developers/gitignore/api/angular,go,visualstudiocode
 
 db/.env
+web/docker-push-command.bat
+web/iac-generator/build-command.bat
