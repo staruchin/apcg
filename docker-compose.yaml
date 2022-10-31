@@ -1,12 +1,14 @@
 version: "3.8"
 services:
   web:
-    image: staruchin/apcg-web:0.0.1
+    image: staruchin/apcg-web:latest
     container_name: apcg-web
     ports:
       - 8080:80
     depends_on:
       - go
+    networks:
+      - frontend
   go:
     build: ./go
     container_name: apcg-goapi
@@ -18,6 +20,9 @@ services:
       - ./go/goapi:/go/src
     depends_on:
       - db
+    networks:
+      - frontend
+      - backend
   db:
     image: mariadb:10.9.3
     container_name: apcg-db
@@ -28,3 +33,18 @@ services:
     volumes:
       - ./db/conf/my.cnf:/etc/mysql/conf.d/my.cnf
       - ./db/init:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.20.0/24
